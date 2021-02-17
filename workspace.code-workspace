@@ -6,5 +6,6 @@
 	],
 	"settings": {
 		"liveServer.settings.multiRootWorkspaceName": "MovieMatcher",
+		"git.ignoreLimitWarning": true,
 	}
 }
