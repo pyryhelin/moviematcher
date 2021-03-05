@@ -11,6 +11,10 @@ module.exports = {
         index: './src/index.js',
         print: './src/print.js',
         swipe: './src/swipe.js',
+        card: './src/card.js',
+        indexstyle: './src/index.css',
+        cardstyle: './src/cardstyle.css'
+
     },
     devtool: 'inline-source-map',
     devServer: {
@@ -55,11 +59,22 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
     },
 
+    devServer: {
+        contentBase: path.join(__dirname, 'dist'),
+        compress: true,
+        port: 9000
+    },
+
     module: {
         rules: [{
-            test: /\.json$/i,
-            type: 'json',
-        }],
+                test: /\.json$/i,
+                type: 'json',
+            },
+            {
+                test: /\.css$/i,
+                use: ["style-loader", "css-loader"],
+            }
+        ],
     },
 
 };

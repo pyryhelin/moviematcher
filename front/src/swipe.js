@@ -13,7 +13,7 @@ class SwipeComponent {
         this.nextArr = [...arr]
     }
 
-    swipingElement() {
+    createElement() {
 
         this.visualElement.id = "visualElement";
         this.visualElement.textContent = this.arr.shift();

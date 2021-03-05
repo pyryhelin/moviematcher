@@ -1,6 +1,6 @@
 import _ from "lodash";
-import printMe from "./print.js";
 import SwipeComponent from "./swipe.js"
+import CardComponent from "./card.js"
 
 const body = document.querySelector('body');
 window.body = body;
@@ -20,23 +20,13 @@ if ('serviceWorker' in navigator) {
 let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 window.arr = arr;
 
-function component() {
-    const element = document.createElement("div");
-    const btn = document.createElement("button");
-
-    element.innerHTML = _.join(["Hello", "webpack"], " ");
-
-    btn.innerHTML = "Click me and check the console!";
-    btn.onclick = printMe;
-
-    element.appendChild(btn);
-
-    return element;
-}
+//const Swiper = new SwipeComponent(arr);
+//window.swiper = Swiper;
 
 
-const Swiper = new SwipeComponent(arr);
-window.swiper = Swiper;
+//document.body.appendChild(Swiper.createElement());
 
+let card = new CardComponent();
+window.card = card;
 
-document.body.appendChild(Swiper.swipingElement());
+document.body.appendChild(card.createElement());
