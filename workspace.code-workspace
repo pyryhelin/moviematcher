@@ -7,5 +7,7 @@
 	"settings": {
 		"liveServer.settings.multiRootWorkspaceName": "MovieMatcher",
 		"git.ignoreLimitWarning": true,
+		"liveServer.settings.host": "192.168.2.166",
+		"liveServer.settings.root": "/front/dist",
 	}
 }

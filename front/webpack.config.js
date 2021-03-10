@@ -12,8 +12,11 @@ module.exports = {
         print: './src/print.js',
         swipe: './src/swipe.js',
         card: './src/card.js',
+        drag: './src/drag.js',
+        utils: './src/utils.js',
         indexstyle: './src/index.css',
-        cardstyle: './src/cardstyle.css'
+        cardstyle: './src/cardstyle.css',
+        buttonstyle: './src/buttonstyle.css'
 
     },
     devtool: 'inline-source-map',
@@ -32,25 +35,25 @@ module.exports = {
             clientsClaim: true,
             skipWaiting: true,
         }),
-        /* new WebpackPwaManifest({
-             filename: "manifest.json",
-             inject: false,
-             fingerprints: false,
-             short_name: "Test",
-             name: "Test",
-             icons: [{
-                 src: path.resolve("src/icon/icon.png"),
-                 size: "192x192"
-             }],
-             start_url: "/",
-             background_color: "#3367D6",
-             display: "standalone",
-             scope: "/",
-             theme_color: "#3367D6",
-             description: "Testing",
-             //includeDirectory: true,
-             destination: "auto"
-         })*/
+        new WebpackPwaManifest({
+            filename: "manifest.json",
+            inject: false,
+            fingerprints: false,
+            short_name: "Test",
+            name: "Test",
+            icons: [{
+                src: path.resolve("src/icon/icon.png"),
+                size: "192x192"
+            }],
+            start_url: "/",
+            background_color: "#3367D6",
+            display: "standalone",
+            scope: "/",
+            theme_color: "#3367D6",
+            description: "Testing",
+            //includeDirectory: true,
+            destination: "auto"
+        })
     ],
 
 
