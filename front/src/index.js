@@ -32,7 +32,7 @@ window.onload = () => {
     //placeholder cards for testing
     let arr = [];
     window.arr = arr;
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 10; i++) {
         arr.push(new Draggable(1, i));
         //document.body.appendChild(arr[i].element);
     }

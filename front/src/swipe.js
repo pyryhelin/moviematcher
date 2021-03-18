@@ -1,4 +1,4 @@
-import { first } from "lodash";
+import { first, random } from "lodash";
 import { Point } from "./utils";
 import { Draggable } from "./drag";
 
@@ -6,11 +6,12 @@ class SwipeComponent {
     constructor(arr, _app) {
         //main element to hold the swiper
         this.element = document.createElement("div");
+        this.element.className = "swiper";
 
-        this.bgCardsContainer = document.createElement("div");
-        this.bgCardsContainerDimensions = new Point(
-            this.bgCardsContainer.offsetWidth,
-            this.bgCardsContainer.offsetHeight
+        this.cardsContainer = document.createElement("div");
+        this.cardsContainerDimensions = new Point(
+            this.cardsContainer.offsetWidth,
+            this.cardsContainer.offsetHeight
         );
 
         this.app = _app;
@@ -41,6 +42,11 @@ class SwipeComponent {
         this.leftPressed = false;
         this.rightPressed = false;
         //list of cards on the screen;
+        this.counter = 0;
+        let rand = Math.random();
+        if (rand < 0.5) rand = -1;
+        else rand = 1;
+        this.rand = rand;
         this.itemsOnScreen = 0;
         this.mainCard = null;
         this.backgroundCards = [];
@@ -66,12 +72,16 @@ class SwipeComponent {
         this.buttonContainer.appendChild(this.btn2);
         this.buttonContainer.className = "buttonContainer";
 
-        this.bgCardsContainer.className = "bg-card-container";
-        this.bgCardsContainer.style.width = this.appDimensions.x + "px";
-        this.bgCardsContainer.style.height = this.mainCard.cardDimensions.y + "px";
+        this.cardsContainer.className = "bg-card-container";
+
+        this.cardsContainer.style.width = this.appDimensions.x + "px";
+        this.cardsContainer.style.height = this.mainCard.cardDimensions.y + "px";
+        //this.cardsContainer.style.width = "356px";
+        //this.cardsContainer.style.height = "407px";
+        //this.cardsContainer.style.transform = `scale(${this.windowDimension.y/625})`
 
         this.element.appendChild(this.buttonContainer);
-        this.element.appendChild(this.bgCardsContainer);
+        //this.element.appendChild(this.cardsContainer);
 
         return this.element;
     }
@@ -80,16 +90,24 @@ class SwipeComponent {
         this.appDimensions = new Point(this.app.offsetWidth, this.app.offsetHeight);
         this.windowDimension = new Point(window.innerWidth, window.innerHeight);
 
-        this.bgCardsContainer.style.width = this.appDimensions.x + "px";
-        this.bgCardsContainer.style.height = this.mainCard.cardDimensions.y + "px";
+        this.cardsContainer.style.width = this.appDimensions.x + "px";
+        this.cardsContainer.style.height = this.mainCard.cardDimensions.y + "px";
 
-        this.bgCardsContainerDimensions = new Point(
-            this.bgCardsContainer.offsetWidth,
-            this.bgCardsContainer.offsetHeight
+        //this.cardsContainer.style.width = "356px";
+        //this.cardsContainer.style.height = "407px";
+        //this.cardsContainer.style.transform = `scale(${this.windowDimension.y/625})`
+
+        this.cardsContainerDimensions = new Point(
+            this.cardsContainer.offsetWidth,
+            this.cardsContainer.offsetHeight
         );
         let a = this.app.getBoundingClientRect();
         this.appPosition = new Point(a.left, a.top);
         this.updateOnscreenItemPositions();
+        // this.mainCard.calculateCardPos();
+        // for (let i = 0; i < this.backgroundCards.length; i++) {
+        //     array[i].calculateCardPos();
+        // }
     }
 
     mouseUpEvent() {
@@ -103,18 +121,35 @@ class SwipeComponent {
     }
 
     nextCard() {
-        let _card = this.mainCard;
+        this.counter++;
+        let __card = this.mainCard;
         this.itemsOnScreen -= 1;
         let a = setTimeout(() => {
-            _card.dispose();
+            __card.dispose();
         }, 500);
+        this.addItemOntoScreen();
         for (let i = 0; i < this.backgroundCards.length; i++) {
             const card = this.backgroundCards[i];
-            if (i == 0) {
-                this.backgroundCards.shift();
-            }
             this.cardStyle(card, i);
         }
+        this.backgroundCards.shift();
+        this.updateBackgroundCardPos();
+
+    }
+
+    cardStyle(_card, id) {
+        if (id == 0) {
+            _card.element.id = "main-card";
+            _card.scaleCard(1);
+            this.mainCard = _card;
+            this.returnCardToCenter();
+            _card.activateEventListeners();
+            return _card;
+        }
+
+        _card.scaleCard(1 - (0.1 + 0.05 * id));
+        _card.element.id = `bg-card-${id}`;
+        return _card;
     }
 
     swipe(_card, dir) {
@@ -224,12 +259,6 @@ class SwipeComponent {
         let posVecLen = Math.sqrt(Math.pow(posVec.x, 2) + Math.pow(posVec.y, 2));
 
         let dirVec = new Point(posVec.x / posVecLen, posVec.y / posVecLen);
-        console.log(
-            new Point(
-                dirVec.x * _card.cardDimensions.z,
-                dirVec.y * _card.cardDimensions.z
-            )
-        );
         _card.moveCard(
             new Point(
                 _card.cardPosition.x + dirVec.x * _card.cardDimensions.x * 2,
@@ -249,18 +278,21 @@ class SwipeComponent {
             0.25,
             "ease-out 75ms"
         );
-        this.bgCardsContainer.style.transform = `translate(${0}px, ${
-			this.mainCard.cardPosition.y - this.mainCard.cardDimensions.y/2
-		}px)`;
+
+        /*this.cardsContainer.style.transform = `translate(${0}px, ${
+        	this.mainCard.cardPosition.y - this.mainCard.cardDimensions.y/2
+        }px)`;*/
     }
 
     clickNo() {
         console.log("no");
+        this.swipe(this.mainCard, "left");
         //this.nextElement();
     }
 
     clickYes() {
         console.log("yes");
+        this.swipe(this.mainCard, "right");
         //this.nextElement();
     }
 
@@ -271,8 +303,6 @@ class SwipeComponent {
             let _card = this.arr.shift();
             this.mainCard = _card;
             this.itemsOnScreen++;
-            let left = this.appDimensions.x / 2;
-            let top = this.appDimensions.y / 2 - this.appDimensions.y * 0.1;
 
             //console.log(left, top);
             this.element.appendChild(_card.element);
@@ -283,11 +313,12 @@ class SwipeComponent {
 
             for (let i = 0; i < 3; i++) {
                 _card = this.cardStyle(this.arr.shift(), i + 1);
-
                 this.backgroundCards.push(_card);
 
                 //console.log(left, top);
-                this.bgCardsContainer.appendChild(_card.element);
+
+                this.element.appendChild(_card.element);
+
                 this.itemsOnScreen++;
             }
 
@@ -296,25 +327,55 @@ class SwipeComponent {
 
             //_card.calculateCardPos();
             //card.hide();
+            return
         }
-
+        let newCard = this.arr.shift();
+        this.backgroundCards.push(newCard);
+        this.element.appendChild(newCard.element);
         //}
     }
 
-    cardStyle(_card, id) {
-        if (id == 0) {
-            _card.element.id = "main-card";
-            this.mainCard = _card;
-            this.returnCardToCenter();
-            _card.activateEventListeners();
-            return _card;
+    getBackgroundCardPosition(_index) {
+        let _card = this.backgroundCards[_index];
+        if (_index == 0) {
+            return new Point(
+                this.mainCard.cardPosition.x +
+                (this.rand * _card.cardDimensions.x) / 4 -
+                _card.cardDimensions.x / 2,
+                this.mainCard.cardPosition.y -
+                _card.cardDimensions.y / 2 -
+                _card.cardDimensions.y / 10
+            );
+        } else if (_index == 1) {
+
+            return new Point(
+                this.mainCard.cardPosition.x -
+                (this.rand * _card.cardDimensions.x) / 4 -
+                _card.cardDimensions.x / 2,
+                this.mainCard.cardPosition.y -
+                _card.cardDimensions.y / 2 -
+                _card.cardDimensions.y / 12
+            );
+        } else if (_index == 2) {
+            return new Point(
+                this.mainCard.cardPosition.x - _card.cardDimensions.x / 2,
+                this.mainCard.cardPosition.y - _card.cardDimensions.y / 2
+            );
         }
-        _card.element.id = `bg-card-${id}`;
-        return _card;
     }
 
+    updateBackgroundCardPos() {
+        let counter = (this.counter % 2 == 0) ? 1 : -1;
+        let center = this.getBackgroundCardPosition(0);
+        this.backgroundCards[0].element.style.transform = `rotate(${counter*this.rand*7}deg) translate(${center.x}px, ${center.y}px)`;
+        center = this.getBackgroundCardPosition(1);
+        this.backgroundCards[1].element.style.transform = `rotate(${counter*this.rand*-7}deg) translate(${center.x}px, ${center.y}px)`;
+        center = this.getBackgroundCardPosition(0);
+        this.backgroundCards[2].element.style.transform = `rotate(${counter*this.rand*7}deg) translate(${center.x}px, ${center.y}px)`;
+    }
     updateOnscreenItemPositions() {
         this.returnCardToCenter();
+        this.updateBackgroundCardPos();
     }
 }
 

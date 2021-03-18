@@ -82,8 +82,8 @@ class Draggable extends CardComponent {
     }
 
     moveCard(point, time = 0, timingFunc = "") {
-        console.log(point);
-        this.element.style.transition = `transform ${time}s ${timingFunc}`;
+        console.log("MOVED CARD:", this.title, point);
+        this.element.style.transition = `transform ${time}s ${timingFunc}, height 0.2s ease-out 0s, width 0.2s ease-out 0s`;
         this.setCardPosition(point);
         //this.element.style.transition = "";
     }
@@ -111,7 +111,6 @@ class Draggable extends CardComponent {
 
         window.addEventListener("touchmove", e => { this.touchMoveEvent(e) });
 
-        window.addEventListener("resize", e => { this.resizeEvent(e) });
     }
 
     deactivateEventListeners() {

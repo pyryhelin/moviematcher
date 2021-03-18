@@ -38,6 +38,7 @@ class CardComponent {
         if (defaultVisibility == 0) {
             this.hide();
         }
+        this.cardScale = 1;
         this.cardHeight = 65;
         this.cardWidth = 35;
         this.bgImage = null;
@@ -45,7 +46,7 @@ class CardComponent {
         this.cardPosition = new Point();
         this.visualViewportHeight = window.visualViewport.height;
         //console.log(this.visualViewportHeight);
-        this.cardDimensions = new Point(
+        this.cardNormalSize = new Point(
             (this.cardWidth / 100) * this.visualViewportHeight,
             (this.cardHeight / 100) * this.visualViewportHeight,
             Math.sqrt(
@@ -54,25 +55,60 @@ class CardComponent {
             )
         );
 
+        this.cardDimensions = new Point(
+            (this.cardWidth / 100) * this.visualViewportHeight * this.cardScale,
+            (this.cardHeight / 100) * this.visualViewportHeight * this.cardScale,
+            Math.sqrt(
+                Math.pow((this.cardWidth / 100) * this.visualViewportHeight * this.cardScale, 2) +
+                Math.pow((this.cardHeight / 100) * this.visualViewportHeight * this.cardScale, 2)
+            )
+        );
+
         this.createElement();
         //this.calculateCardPos();
         //console.log(this.cardDimensions.x);
     }
 
-    resizeEvent() {
-        this.visualViewportHeight = window.visualViewport.height;
-
+    scaleCard(value) {
+        console.log("SCALE CARD", this.title, value);
         this.cardDimensions = new Point(
+            this.cardNormalSize.x * value,
+            this.cardNormalSize.y * value
+        );
+        this.element.style.width = this.cardDimensions.x + "px";
+        this.element.style.height = this.cardDimensions.y + "px";
+
+        this.cardScale = value;
+    }
+
+
+    resizeEvent() {
+
+        this.visualViewportHeight = window.visualViewport.height;
+        this.cardNormalSize = new Point(
             (this.cardWidth / 100) * this.visualViewportHeight,
-            (this.cardHeight / 100) * this.visualViewportHeight
+            (this.cardHeight / 100) * this.visualViewportHeight,
+            Math.sqrt(
+                Math.pow((this.cardWidth / 100) * this.visualViewportHeight, 2) +
+                Math.pow((this.cardHeight / 100) * this.visualViewportHeight, 2)
+            )
+        );
+        this.cardDimensions = new Point(
+            this.cardNormalSize.x * this.cardScale,
+            this.cardNormalSize.y * this.cardScale,
+            Math.sqrt(
+                Math.pow(this.cardNormalSize.x * this.cardScale, 2) +
+                Math.pow(this.cardNormalSize.y * this.cardScale, 2)
+            )
         );
 
         this.element.style.width = `${
-			(this.cardWidth / 100) * this.visualViewportHeight
+			this.cardDimensions.x
 		}px`;
         this.element.style.height = `${
-			(this.cardHeight / 100) * this.visualViewportHeight
+			this.cardDimensions.y
 		}px`;
+
     }
 
     activateEventListeners() {
@@ -87,10 +123,10 @@ class CardComponent {
         this.element.className = "cardContainer";
         //console.log(this.element);
         this.element.style.width = `${
-			(this.cardWidth / 100) * this.visualViewportHeight
+			this.cardDimensions.x
 		}px`;
         this.element.style.height = `${
-			(this.cardHeight / 100) * this.visualViewportHeight
+			this.cardDimensions.y
 		}px`;
 
         /*
@@ -121,6 +157,7 @@ class CardComponent {
         //this.element.appendChild(card);
         this.element.appendChild(backgroundImage);
         this.element.appendChild(infobox);
+        window.addEventListener("resize", e => { this.resizeEvent(e) });
         return this.element;
     }
 
@@ -137,6 +174,7 @@ class CardComponent {
     updateTitle(titleText) {
         this.title = titleText;
     }
+
 }
 
 class CardGenerator {

@@ -5,8 +5,9 @@
     border-radius: 27px;
     filter: drop-shadow(10px 14px 11px rgba(0, 0, 0, 0.4));
     position: absolute;
-    transform-origin: center;
+    transform-origin: center center;
     z-index: 100;
+    transition: height 0.2s ease-out 0s, width 0.2s ease-out 0s;
 }
 
 .bg-card-container {
@@ -15,21 +16,18 @@
 }
 
 #bg-card-1 {
-    transform: scale(0.85) rotate(7deg) translate(75%, 0%);
     z-index: 50;
-    transition: transform 0.2s ease-out 0s;
+    transition: transform 0.2s ease-out 0s, height 0.2s ease-out 0s, width 0.2s ease-out 0s;
 }
 
 #bg-card-2 {
-    transform: scale(0.8) rotate(-7deg) translate(25%, 5%);
     z-index: 49;
-    transition: transform 0.2s ease-out 0s;
+    transition: transform 0.2s ease-out 0s, height 0.2s ease-out 0s, width 0.2s ease-out 0s;
 }
 
 #bg-card-3 {
-    transform: scale(0.75) rotate(2deg) translate(50%, 12%);
     z-index: 48;
-    transition: transform 0.2s ease-out 0s;
+    transition: transform 0.2s ease-out 0s, height 0.2s ease-out 0s, width 0.2s ease-out 0s;
 }
 
 .bg-img {
