@@ -1,0 +1,85 @@
+.cardContainer {
+    margin: 0px;
+    background-color: aliceblue;
+    overflow: hidden;
+    border-radius: 27px;
+    filter: drop-shadow(10px 14px 11px rgba(0, 0, 0, 0.4));
+    position: absolute;
+    transform-origin: center center;
+    z-index: 100;
+    transition: height 0.2s ease-out 0s, width 0.2s ease-out 0s;
+}
+
+.bg-card-container {
+    position: absolute;
+    background-color: black;
+}
+
+#bg-card-1 {
+    z-index: 50;
+    transition: transform 0.2s ease-out 0s, height 0.2s ease-out 0s, width 0.2s ease-out 0s;
+}
+
+#bg-card-2 {
+    z-index: 49;
+    transition: transform 0.2s ease-out 0s, height 0.2s ease-out 0s, width 0.2s ease-out 0s;
+}
+
+#bg-card-3 {
+    z-index: 48;
+    transition: transform 0.2s ease-out 0s, height 0.2s ease-out 0s, width 0.2s ease-out 0s;
+}
+
+.bg-img {
+    max-height: 100%;
+    transform: translate(-25%, 0);
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Old versions of Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+}
+
+.infobox {
+    width: inherit;
+    height: 120px;
+    position: absolute;
+    bottom: 0px;
+    background: rgba(127, 128, 147, 0.7);
+    box-shadow: 0px -7px 14px rgba(164, 164, 164, 0.7);
+    border-radius: 63px 63px 0 0;
+}
+
+h1 {
+    font-family: Open Sans;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 30px;
+    line-height: 49px;
+    color: #FFFFFF;
+    text-shadow: 3px 4px 5px rgba(0, 0, 0, 0.5);
+}
+
+.draggable {
+    position: absolute;
+}
+
+
+/*
+@media only screen and (max-width: 600px) {
+    .card {
+        width: 250px;
+        height: 600px;
+        background-color: aliceblue;
+    }
+}*/
